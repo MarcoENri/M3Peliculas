@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { TextInput, Button, View, StyleSheet, ScrollView } from 'react-native';
+
+import React, { useState } from 'react';
+import { TextInput, Button, View, StyleSheet, ScrollView, Text } from 'react-native';
+import { Scene } from '../../Utils/models';
 import apiClient from '../../Utils/apiClient';
-import { Character } from '../../Utils/models';
 
-const EditCharacter = ({ route, navigation }: any) => {
-  const { character } = route.params;
-  const [updatedCharacter, setUpdatedCharacter] = useState<Character>(character);
+const EditScene = ({ route, navigation }: any) => {
+  const { scene: initialScene } = route.params;
+  const [scene, setScene] = useState<Scene | undefined>(initialScene);
 
-  useEffect(() => {
-    setUpdatedCharacter(character);
-  }, [character]);
+  if (!scene) {
+    return <Text>Error: Scene not found</Text>;
+  }
 
   const handleSave = async () => {
     try {
-      await apiClient.put(`/character/${updatedCharacter.id}`, updatedCharacter);
+      await apiClient.put(`/scene/${scene.id}`, scene);
       navigation.goBack();
     } catch (error) {
       console.error(error);
@@ -25,40 +26,35 @@ const EditCharacter = ({ route, navigation }: any) => {
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Description"
-          value={updatedCharacter.description}
-          onChangeText={text => setUpdatedCharacter(prev => ({ ...prev, description: text }))}
+          value={scene.description}
+          onChangeText={text => setScene(prev => prev ? { ...prev, description: text } : prev)}
           style={styles.input}
         />
         <TextInput
-          placeholder="Cost"
-          value={updatedCharacter.cost.toString()}
-          onChangeText={text => setUpdatedCharacter(prev => ({ ...prev, cost: parseFloat(text) }))}
+          placeholder="Minutes"
+          value={scene.minutes?.toString() || ''}
+          onChangeText={text => setScene(prev => prev ? { ...prev, minutes: parseInt(text, 10) } : prev)}
           style={styles.input}
           keyboardType="numeric"
         />
         <TextInput
-          placeholder="Name Actor"
-          value={updatedCharacter.nameActor}
-          onChangeText={text => setUpdatedCharacter(prev => ({ ...prev, nameActor: text }))}
+          placeholder="Location"
+          value={scene.location}
+          onChangeText={text => setScene(prev => prev ? { ...prev, location: text } : prev)}
           style={styles.input}
         />
         <TextInput
-          placeholder="Role"
-          value={updatedCharacter.rol}
-          onChangeText={text => setUpdatedCharacter(prev => ({ ...prev, rol: text }))}
+          placeholder="Setting"
+          value={scene.setting}
+          onChangeText={text => setScene(prev => prev ? { ...prev, setting: text } : prev)}
           style={styles.input}
         />
         <TextInput
-          placeholder="Importance"
-          value={updatedCharacter.importance}
-          onChangeText={text => setUpdatedCharacter(prev => ({ ...prev, importance: text }))}
+          placeholder="Film ID"
+          value={scene.filmId?.toString() || ''}
+          onChangeText={text => setScene(prev => prev ? { ...prev, filmId: parseInt(text, 10) } : prev)}
           style={styles.input}
-        />
-        <TextInput
-          placeholder="Scene Description"
-          value={updatedCharacter.sceneDescription}
-          onChangeText={text => setUpdatedCharacter(prev => ({ ...prev, sceneDescription: text }))}
-          style={styles.input}
+          keyboardType="numeric"
         />
       </View>
       <Button title="Save" onPress={handleSave} />
@@ -92,14 +88,14 @@ const styles = StyleSheet.create({
     borderRadius: 4, 
     alignItems: 'center',
     marginTop: 10,
-    width: 100,
+    width: 100, 
     alignSelf: 'flex-end', 
   },
   addButton: {
     backgroundColor: '#0000ff', 
     paddingVertical: 6, 
     paddingHorizontal: 10, 
-    borderRadius: 4, 
+    borderRadius: 4,
     alignItems: 'center',
     marginTop: 20,
     width: 150, 
@@ -118,11 +114,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   itemText: {
-    color: '#ffffff', 
+    color: '#ffffff',
     fontSize: 16,
   },
 });
-  
-  
 
-export default EditCharacter;
+
+
+export default EditScene;

@@ -1,6 +1,5 @@
-// src/screens/Auth/LoginScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -17,7 +16,7 @@ const LoginScreen = ({ navigation }: any) => {
       const { jwt } = response.data;
       await AsyncStorage.setItem('jwt', jwt);
       Alert.alert('Login Successful', 'You have successfully logged in!');
-      navigation.navigate('FilmsList'); // Verifica que este nombre coincida con el nombre en App.tsx
+      navigation.navigate('FilmsList'); 
     } catch (error) {
       console.error('Login error:', error);
       Alert.alert('Login Failed', 'Invalid username or password');
@@ -25,27 +24,42 @@ const LoginScreen = ({ navigation }: any) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Login" onPress={handleLogin} />
-    </View>
+    <ImageBackground
+      source={{ uri: 'https://www.indiewire.com/wp-content/uploads/2020/04/tilezoom.jpeg' }}
+      style={styles.background}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.registerLink}>
+          <Text style={styles.registerText}>Don't have an account? Register</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: 'cover', 
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -55,6 +69,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
     textAlign: 'center',
+    color: '#ffffff', 
   },
   input: {
     height: 40,
@@ -62,6 +77,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 8,
+    backgroundColor: '#ffffff', 
+  },
+  button: {
+    backgroundColor: '#0000ff', 
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8, 
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  buttonText: {
+    color: '#ffffff', 
+    fontSize: 16,
+  },
+  registerLink: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  registerText: {
+    color: '#ffffff',
+    fontSize: 16,
   },
 });
 

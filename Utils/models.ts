@@ -7,7 +7,7 @@ export interface Film {
     duration: number;
     releaseDate: string;
     genre: string;
-    box_office: number;
+    boxOffice: number;
   }
   
   export interface Scene {
@@ -16,7 +16,7 @@ export interface Film {
     minutes: number;
     location: string;
     setting: string;
-    film_id: number;
+    filmId: number;
   }
   
   export interface Character {
